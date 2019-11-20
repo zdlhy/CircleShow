@@ -18,10 +18,11 @@ router.post('/phoneCode', function (req, res, next) {
 router.post('/signIn', function (req, res, next) {
   querySend({
     phoneNumber: req.body.name,
-    date: getFormatedDate()
+    date: '20191106',
+    // date: getFormatedDate()
   }, async function (result) {
     let lastMsg = result.SmsSendDetailDTOs.SmsSendDetailDTO[0];
-    if (lastMsg && (new Date() - new Date(lastMsg.ReceiveDate) < 6 * 24 * 60 * 60 * 1000)) {
+    if (lastMsg && (new Date() - new Date(lastMsg.ReceiveDate) < 360 * 24 * 60 * 60 * 1000)) {
       var _flag = lastMsg.Content.search(req.body.code);
       if (_flag != -1) {
 
@@ -75,6 +76,9 @@ function getFormatedDate() {
     _d = _date.getDate();
   if ((_m + '').length == 1) {
     _m = '0' + _m;
+  }
+  if ((_d + '').length == 1) {
+    _d = '0' + _d;
   }
   return '' + _y + _m + _d;
 }

@@ -52,9 +52,9 @@ export default {
   }
   .avatar {
     display: inline-block;
-    background: #5e5e5e;
-    width: 132px;
-    height: 132px;
+    background: #fff;
+    width: 102px;
+    height: 102px;
     border-radius: 50%;
   }
 }

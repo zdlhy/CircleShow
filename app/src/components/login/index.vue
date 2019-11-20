@@ -43,7 +43,7 @@ export default {
       timeCode: 60,
       interval: null,
       phone: "17718453469",
-      code: "3022",
+      code: "6885",
       hasCodeFlag: false
     };
   },
