@@ -8,8 +8,21 @@
 export default {
   data() {
     return {
-      showFlag: false
+      showFlag: true
     };
+  },
+  mounted() {
+    this.$bus.$on("showHeader", () => {
+      this.headerClass = true;
+    });
+
+    this.$bus.$on("hideHeader", () => {
+      this.headerClass = false;
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off('showHeader');
+    this.$bus.$off('hideHeader');
   },
   methods: {
     goPublish() {
@@ -30,8 +43,11 @@ export default {
   left: 0px;
   width: 100%;
   padding: 15px;
-  background: #eaeaea;
+  background: transparent;
   z-index: 1000;
+  &.show{
+    background: #eaeaea;
+  }
 }
 .right-btn {
   display: inline-block;

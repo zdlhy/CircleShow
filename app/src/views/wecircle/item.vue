@@ -19,7 +19,8 @@
       </div>
       <div class="msg">
         <span class="time">{{date.time + date.type}}{{date.time?'前':''}}</span>
-        <span class="weui-icon-btn weui-icon-btn_more operation">·&nbsp;·</span>
+        <span></span>
+        <span class="weui-icon-btn weui-icon-btn_more operation" @click="!showFlag">·&nbsp;·</span>
       </div>
       <div class="talk" v-show="data.like&&data.like.length != 0||data.msg&&data.msg.length!=0">
         <p class="like" v-show="data.like&&data.like.length != 0">
@@ -45,7 +46,9 @@
 export default {
   props: ["data"],
   data() {
-    return {};
+    return {
+      showFlag:false
+    };
   },
   methods: {
     previewFn(item, index) {

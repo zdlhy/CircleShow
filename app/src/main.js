@@ -5,6 +5,10 @@ import store from './store'
 import 'src/assets/weui.min.css'
 import axios from './request.js'
 
+import vueBus from './bus.js'
+
+Vue.use(vueBus)
+
 Vue.prototype.axios = axios
 
 Vue.config.productionTip = false

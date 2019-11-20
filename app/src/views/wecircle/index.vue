@@ -16,6 +16,11 @@ export default {
     topHead,
     bgTemp,
     list
+  },
+  beforeCreate(){
+    if(!this.$store.state.user){
+      this.$router.push('/login')
+    }
   }
 };
 </script>
