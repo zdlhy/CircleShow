@@ -8,8 +8,8 @@
 
 <script>
 import topHead from "./header";
-import bgTemp from "./background"
-import list from './list'
+import bgTemp from "./background";
+import list from "./list";
 
 export default {
   components: {
@@ -17,9 +17,9 @@ export default {
     bgTemp,
     list
   },
-  beforeCreate(){
-    if(!this.$store.state.user){
-      this.$router.push('/login')
+  beforeCreate() {
+    if (!this.$store.state.user._id) {
+      this.$router.push("/login");
     }
   }
 };

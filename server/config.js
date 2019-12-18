@@ -1,6 +1,6 @@
 module.exports = {
     TOKEN_SECRET: 'zdl_',//token key
-    TOKEN_TIME: 1000 * 60 *60,//token过期时间ms
+    TOKEN_TIME: 60 * 60,//token过期时间s（1小时过期）
     TOKEN_API:[
         '/users/signIn',
         '/users/phoneCode',

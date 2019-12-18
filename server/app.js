@@ -8,6 +8,7 @@ var sys_config = require('./config.js');
 
 var usersRouter = require('./routes/users');
 var publishRouter = require('./routes/publish')
+var postRouter = require('./routes/post')
 
 var app = express();
 
@@ -54,5 +55,6 @@ app.use(cookieParser());
 
 app.use('/users', usersRouter);
 app.use('/publish', publishRouter);
+app.use('/post',postRouter);
 
 module.exports = app;

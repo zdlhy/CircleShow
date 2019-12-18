@@ -2,8 +2,12 @@ var express = require('express');
 var { SendSms, querySend } = require('../utils/sms.js');
 var tokenUtil = require('../utils/token.js');
 var User = require('../models/User')
+var upFile = require('../utils/upFile')
+var sys_config = require('../config')
 
 var router = express.Router();
+
+// 获取验证码
 router.post('/phoneCode', function (req, res, next) {
   SendSms(req.body.phone, function () {
     res.send({
@@ -15,6 +19,8 @@ router.post('/phoneCode', function (req, res, next) {
     res.send(JSON.stringify(err));
   })
 });
+
+// 登录
 router.post('/signIn', function (req, res, next) {
   querySend({
     phoneNumber: req.body.name,
@@ -67,6 +73,32 @@ router.post('/signIn', function (req, res, next) {
     })
   })
 })
+
+// 更改用户背景图片
+router.post('/uploadImg', upFile.single('bgImg'), function (req, res, next) {
+  var bgUrl = sys_config.PICTURE_SERVER_HOST + sys_config.PICTURE_SERVER_PATH + "/" + req.file.filename;
+  User.update({
+    _id: req.body.id
+  }, {
+    bgUrl: bgUrl
+  }, function (error) {
+    if (error) {
+      res.send({
+        code: 0,
+        data: error,
+        message: "更新失败"
+      })
+    } else {
+      res.send({
+        code: 1,
+        data: {
+          bgUrl: bgUrl
+        },
+        message: "请求成功"
+      })
+    }
+  })
+});
 
 // 日期格式化: yyyymmdd
 function getFormatedDate() {

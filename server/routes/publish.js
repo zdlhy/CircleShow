@@ -1,19 +1,10 @@
 var express = require('express');
-var multer = require('multer');
 
 var sys_config = require('../config');
 var Post = require('../models/Post');
+var upload = require('../utils/upFile');
 
 var router = express.Router();
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + '.' + file.originalname.split('.').reverse()[0])
-    }
-})
-var upload = multer({ storage: storage })
 
 // 文件上传
 router.post('/upFile', upload.single('picture'), function (req, res, next) {
@@ -47,6 +38,5 @@ router.post('/postText', function (req, res, next) {
         })
     })
 })
-
 
 module.exports = router;

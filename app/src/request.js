@@ -22,7 +22,9 @@ instance.interceptors.response.use(function (response) {
   if (response.data.code === '1') {
     return response.data
   } else if (response.data.code === '-1') {
-    window.location.href = '/login'
+    window.location.href = '/#/login'
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject('error')
   } else {
     weui.topTips(response.data.message)
   }

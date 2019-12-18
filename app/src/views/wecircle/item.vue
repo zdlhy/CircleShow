@@ -4,25 +4,48 @@
       <img src="../../assets/avatar.png" alt />
     </dt>
     <dd>
-      <h4 class="name">{{data.name}}</h4>
+      <h4 class="name">{{data.user.nickname}}</h4>
+      <!-- 留言信息 -->
       <p class="content nowrap" v-html="data.content"></p>
-      <div class="pho-grids" :class="data.pho.length > 1?'':'sign'">
+      <!-- 图片部分 -->
+      <div class="pho-grids" :class="data.pictureList.length > 1?'':'sign'">
         <a
           href="javascript:;"
           class="pho-grid"
-          v-for="(item,index) in data.pho"
+          v-for="(item,index) in data.pictureList"
           :key="index"
           @click="previewFn(item,index)"
         >
           <img :src="item" alt />
         </a>
       </div>
+      <!-- 时间及操作部分 -->
       <div class="msg">
         <span class="time">{{date.time + date.type}}{{date.time?'前':''}}</span>
-        <span></span>
-        <span class="weui-icon-btn weui-icon-btn_more operation" @click="!showFlag">·&nbsp;·</span>
+        <div class="opera-box" @click="showPanel($event)">
+          <transition name="slide">
+            <div class="box-panel" v-show="showFlag">
+              <div class="like-box">
+                <div class="like-icon"></div>
+                <div class="like-text" @click="addLike" v-show="!data.isLike">赞</div>
+                <div class="like-text" @click="removeLike" v-show="data.isLike">取消</div>
+              </div>
+              <div class="divider"></div>
+              <div class="comment-box" @click="addComment($event)">
+                <div class="comment-icon"></div>
+                <div class="comment-text">评论</div>
+              </div>
+            </div>
+          </transition>
+        </div>
+        <span
+          class="weui-icon-btn weui-icon-btn_more operation"
+          @click="showFlag=!showFlag"
+        >·&nbsp;·</span>
       </div>
+      <!-- 交互部分 -->
       <div class="talk" v-show="data.like&&data.like.length != 0||data.msg&&data.msg.length!=0">
+        <!-- 点赞部分开始 -->
         <p class="like" v-show="data.like&&data.like.length != 0">
           <i class="like-icon"></i>
           <span
@@ -31,12 +54,15 @@
             style="white-space:nowrap;"
           >{{item}}{{index+1 === data.like.length?'':','}}</span>
         </p>
+        <!-- 点赞部分结束 -->
+        <!-- 留言部分开始 -->
         <ul v-show="data.msg&&data.msg.length != 0">
           <li v-for="(item,index) in data.msg" :key="index">
             <span>{{item.name}}:</span>
             <p>{{item.content}}</p>
           </li>
         </ul>
+        <!-- 留言部分结束 -->
       </div>
     </dd>
   </dl>
@@ -47,30 +73,32 @@ export default {
   props: ["data"],
   data() {
     return {
-      showFlag:false
+      showFlag: false,
+      isLike: false
     };
   },
   methods: {
     previewFn(item, index) {
-    //   var gallery = weui.gallery(item, {
-    //     className: "custom-classname",
-    //     onDelete: function() {
-    //       if (confirm("确定删除该图片？")) {
-    //         console.log("删除");
-    //       }
-    //       gallery.hide(function() {
-    //         console.log("`gallery` has been hidden");
-    //       });
-    //     }
-    //   });
-      
-    }
+      //   var gallery = weui.gallery(item, {
+      //     className: "custom-classname",
+      //     onDelete: function() {
+      //       if (confirm("确定删除该图片？")) {
+      //         console.log("删除");
+      //       }
+      //       gallery.hide(function() {
+      //         console.log("`gallery` has been hidden");
+      //       });
+      //     }
+      //   });
+    },
+    addLike() {},
+    removeLike() {}
   },
   computed: {
     date() {
       let _type = {};
       let date_l = parseInt(
-        (new Date() - new Date(this.data.time)) / (1000 * 60)
+        (new Date() - new Date(this.data.create)) / (1000 * 60)
       ); //分
       if (date_l < 10) {
         _type = {
@@ -156,6 +184,7 @@ dd {
       .pho-grid {
         display: block;
         width: 200px;
+        height: auto;
         img {
           width: 100%;
         }
@@ -169,8 +198,8 @@ dd {
       overflow: hidden;
       img {
         display: block;
-        max-width: 100%;
-        max-height: 100%;
+        min-width: 100%;
+        min-height: 100%;
       }
     }
   }
@@ -178,6 +207,7 @@ dd {
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
+    position: relative;
     .time {
       color: #b2b2b2;
     }
@@ -241,5 +271,80 @@ dd {
       }
     }
   }
+}
+.box-panel.slide-enter-active {
+  transition: transform 300ms;
+}
+.box-panel.slide-leave-active {
+  transition: transform 300ms;
+}
+.box-panel.slide-enter {
+  transform: translate3d(180px, 0, 0);
+}
+.box-panel.slide-enter-to {
+  transform: translate3d(0, 0, 0);
+}
+.box-panel.slide-leave {
+  transform: translate3d(0, 0, 0);
+}
+.box-panel.slide-leave-to {
+  transform: translate3d(180px, 0, 0);
+}
+.opera-box {
+  width: 180px;
+  height: 40px;
+  position: absolute;
+  right: 42px;
+  top: -10px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.box-panel {
+  width: 180px;
+  height: 40px;
+  background-color: rgb(79, 80, 82);
+  border-radius: 4px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  overflow: hidden;
+}
+.like-icon {
+  width: 17px;
+  height: 17px;
+  background-image: url("../../assets/heart.png");
+  background-size: cover;
+  background-position: center center;
+}
+.comment-icon {
+  width: 17px;
+  height: 17px;
+  background-image: url("../../assets/comment.png");
+  background-size: cover;
+  background-position: center center;
+}
+.comment-text,
+.like-text {
+  color: #fff;
+  font-size: 13px;
+  margin-left: 3px;
+  min-width: 12px;
+}
+.comment-text {
+  white-space: nowrap;
+}
+.like-box,
+.comment-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.divider {
+  width: 1px;
+  height: 20px;
+  background-color: #3b3c3e;
+  align-self: center;
 }
 </style>

@@ -1,39 +1,54 @@
 <template>
-  <div class="top-head clearfix" :class="{show:showFlag}">
+  <div class="top-head clearfix" :class="{show:showFlag}" :style="{opacity:opacity}">
     <i class="right-btn" @click="goPublish"></i>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      showFlag: true
-    };
+      showFlag: false,
+      opacity: 1
+    }
   },
-  mounted() {
-    this.$bus.$on("showHeader", () => {
-      this.headerClass = true;
-    });
-
-    this.$bus.$on("hideHeader", () => {
-      this.headerClass = false;
-    });
+  mounted () {
+    this.$bus.$on('showHeader', scrollTop => {
+      // 230 250 280
+      let showMin = 210
+      let showMed = 250
+      let showMax = 290
+      if (scrollTop < showMin) {
+        this.showFlag = false
+        this.opacity = 1
+      } else if (scrollTop >= showMin && scrollTop < showMed) {
+        let _opacity = (showMed - scrollTop) / (showMed - showMin)
+        this.opacity = _opacity
+        this.showFlag = false
+      } else if (scrollTop >= showMed && scrollTop < showMax) {
+        let _opacity = 1 - (showMax - scrollTop) / (showMax - showMed)
+        this.opacity = _opacity
+        this.showFlag = true
+      } else {
+        this.opacity = 1
+        this.showFlag = true
+      }
+    })
   },
-  beforeDestroy() {
-    this.$bus.$off('showHeader');
-    this.$bus.$off('hideHeader');
+  beforeDestroy () {
+    this.$bus.$off('showHeader')
+    this.$bus.$off('hideHeader')
   },
   methods: {
-    goPublish() {
+    goPublish () {
       if (this.$store.state.user) {
-        this.$router.push("/publish");
+        this.$router.push('/publish')
       } else {
-        this.$router.push("/login");
+        this.$router.push('/login')
       }
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
@@ -45,16 +60,22 @@ export default {
   padding: 15px;
   background: transparent;
   z-index: 1000;
-  &.show{
+  &.show {
     background: #eaeaea;
   }
 }
+
+.show .right-btn {
+  background: url("../../assets/circle-b.png") no-repeat center;
+  background-size: 100%;
+}
+
 .right-btn {
+  float: right;
   display: inline-block;
   width: 24px;
   height: 24px;
   background: url("../../assets/circle.png") no-repeat center;
   background-size: 100%;
-  float: right;
 }
 </style>
