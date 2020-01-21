@@ -38,80 +38,80 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       timeCode: 60,
       interval: null,
-      phone: "17718453469",
-      code: "6885",
+      phone: '17718453469',
+      code: '6885',
       hasCodeFlag: false
-    };
+    }
   },
-  beforeDestroy() {
-    this.clearInter();
+  beforeDestroy () {
+    this.clearInter()
   },
   methods: {
-    getCode() {
+    getCode () {
       if (!this.checkPhone()) {
-        return;
+        return
       }
       this.axios
-        .post("/users/phoneCode", {
+        .post('/users/phoneCode', {
           phone: this.phone
         })
         .then(res => {
-          this.code = res.data.code;
-        });
-      this.setInter();
+          this.code = res.data.code
+        })
+      this.setInter()
     },
-    login() {
+    login () {
       if (!this.checkPhone()) {
-        return;
+        return
       }
       if (!this.checkCode()) {
-        return;
+        return
       }
       this.axios
-        .post("/users/signIn", {
+        .post('/users/signIn', {
           name: this.phone,
           code: this.code
         })
         .then(res => {
-          this.$store.dispatch('setUser',res.data);
-          this.$router.push("/");
-        });
+          this.$store.dispatch('setUser', res.data)
+          this.$router.push('/')
+        })
     },
-    checkPhone() {
+    checkPhone () {
       if (!/^\d{11}$/.test(this.phone)) {
-        weui.topTips("请输入正确手机号");
-        return false;
+        weui.topTips('请输入正确手机号')
+        return false
       } else {
-        return true;
+        return true
       }
     },
-    checkCode() {
+    checkCode () {
       if (!/^\d{4}$/.test(this.code)) {
-        weui.topTips("请输入正确验证码");
-        return false;
+        weui.topTips('请输入正确验证码')
+        return false
       } else {
-        return true;
+        return true
       }
     },
-    setInter() {
-      this.timeCode--;
+    setInter () {
+      this.timeCode--
       this.interval = setInterval(() => {
-        this.timeCode--;
+        this.timeCode--
         if (this.timeCode == 0) {
-          this.timeCode = 60;
-          this.clearInter();
+          this.timeCode = 60
+          this.clearInter()
         }
-      }, 1000);
+      }, 1000)
     },
-    clearInter() {
-      clearInterval(this.interval);
+    clearInter () {
+      clearInterval(this.interval)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
