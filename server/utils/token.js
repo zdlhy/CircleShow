@@ -3,8 +3,9 @@ var _opt = require('../config.js');
 
 module.exports = {
     setToken(data, res) {
+        var _data = JSON.parse(JSON.stringify(data))
         var token = jwt.sign(
-            data,
+            _data,
             _opt.TOKEN_SECRET,
             {
                 expiresIn: _opt.TOKEN_TIME

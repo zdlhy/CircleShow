@@ -90,43 +90,8 @@ router.post('/sendMsg', async function (req, res, next) {
 
     var fromUser = req.user._id,
         toUser = req.body.toUser,
-        content = req.body.content;
-    // 获取聊天ID
-    try {
-        var _result = await Chat.find({
-            $or: [
-                { $and: [{ 'fromUser': fromUser }, { 'toUser': toUser._id }] },
-                { $and: [{ 'fromUser': toUser._id }, { 'toUser': fromUser }] }
-            ]
-        }).sort({ 'create': 1 }).exec();
-        var chatId = _result[0] && _result[0]._id
-    } catch (e) {
-        res.json({
-            code: '0',
-            data: e,
-            messages: '获取聊天ID失败'
-        })
-        return;
-    }
-
-    // 新聊天，创建聊天ID
-    if (!chatId) {
-        try {
-            var _result = await Chat.create({
-                fromUser: fromUser,
-                toUser: toUser._id,
-                isDel: false
-            });
-            chatId = _result._id;
-        } catch (e) {
-            res.json({
-                code: '0',
-                data: e,
-                messages: '创建聊天失败'
-            })
-            return;
-        }
-    }
+        content = req.body.content,
+        chatId = req.body.id
 
     // 添加聊天信息
     try {
@@ -146,7 +111,7 @@ router.post('/sendMsg', async function (req, res, next) {
     }
 
     socket.sendMsg({
-        id: toUser._id,
+        id: chatId,
         action: 'recieveMsg',
         data: {
             content: content,
@@ -157,8 +122,27 @@ router.post('/sendMsg', async function (req, res, next) {
 
     res.json({
         code: '1',
-        data: null,
+        data: {},
         messages: '发送成功'
+    })
+})
+
+// 获取聊天列表
+router.get('/getChatList', async function (req, res, next) {
+
+    var user = req.user;
+
+    var chatList = await Chat.find({
+        $or: [
+            { 'fromUser': user._id },
+            { 'toUser': user._id }
+        ]
+    }).sort({ 'create': 1 }).populate('toUser').populate('fromUser').exec();
+
+    res.json({
+        code: '1',
+        data: chatList,
+        messages: '请求成功'
     })
 })
 

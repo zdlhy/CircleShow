@@ -42,7 +42,7 @@ export default {
     return {
       timeCode: 60,
       interval: null,
-      phone: '17718453469',
+      phone: '',
       code: '6885',
       hasCodeFlag: false
     }
@@ -78,7 +78,7 @@ export default {
         })
         .then(res => {
           this.$store.dispatch('setUser', res.data)
-          this.$router.push('/')
+          this.$router.push('/chatList')
         })
     },
     checkPhone () {

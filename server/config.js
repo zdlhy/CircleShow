@@ -7,6 +7,7 @@ module.exports = {
     ],//免token验证白名单
     MONGO_HOST: 'mongodb://127.0.0.1:27017/',//mongoDB地址
     MONGO_DB: 'wecircle',//使用数据库
-    PICTURE_SERVER_HOST: 'http://127.0.0.1:3000',//图片服务
-    PICTURE_SERVER_PATH: '/static',//图片服务路径
+    PICTURE_SERVER_HOST: 'http://192.168.200.23',//图片服务
+    PICTURE_SERVER_PORT: '3000',//服务端口
+    PICTURE_SERVER_PATH: '/static/',//图片服务路径
 }

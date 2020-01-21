@@ -9,6 +9,7 @@ var sys_config = require('./config.js');
 var usersRouter = require('./routes/users');
 var publishRouter = require('./routes/publish')
 var postRouter = require('./routes/post')
+var chatRouter = require('./routes/chat')
 
 var app = express();
 
@@ -32,8 +33,10 @@ app.all('*', function (req, res, next) {
     var token = req.headers.author || '';
     var userMsg = tokenUtil.checkToken(token);
     if (userMsg) {
+        delete userMsg.iat;
+        delete userMsg.exp;
         req.user = userMsg;
-        tokenUtil.setToken({ userName: userMsg.userName, userId: userMsg.userId }, res)
+        tokenUtil.setToken(userMsg, res)
         next();
     } else {
         if (sys_config.TOKEN_API.join(',').indexOf(req.path) != -1) {
@@ -56,5 +59,6 @@ app.use(cookieParser());
 app.use('/users', usersRouter);
 app.use('/publish', publishRouter);
 app.use('/post',postRouter);
+app.use('/chat',chatRouter)
 
 module.exports = app;

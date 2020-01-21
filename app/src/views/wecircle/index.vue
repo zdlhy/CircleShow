@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import topHead from "./header";
-import bgTemp from "./background";
-import list from "./list";
+import topHead from './header'
+import bgTemp from './background'
+import list from './list'
 
 export default {
   components: {
@@ -17,12 +17,12 @@ export default {
     bgTemp,
     list
   },
-  beforeCreate() {
+  beforeCreate () {
     if (!this.$store.state.user._id) {
-      this.$router.push("/login");
+      this.$router.push('/login')
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

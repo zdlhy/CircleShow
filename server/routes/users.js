@@ -21,8 +21,30 @@ router.post('/phoneCode', function (req, res, next) {
 });
 
 // 登录
-router.post('/signIn', function (req, res, next) {
-  querySend({
+router.post('/signIn', async function (req, res, next) {
+  //查询用户
+  var __user = await checkUser(req.body.name);
+  // 用户不存在则创建用户
+  if (!__user) {
+    __user = await createUser(req.body.name);
+  }
+
+  var _url = sys_config.PICTURE_SERVER_HOST + ':' + sys_config.PICTURE_SERVER_PORT + sys_config.PICTURE_SERVER_PATH;
+  __user.avatar = _url + __user.avatar;
+  __user.bgUrl = _url + __user.bgUrl;
+
+
+  // 创建token
+  tokenUtil.setToken(__user, res)
+
+  res.send({
+    code: 1,
+    data: __user,
+    message: "登录成功"
+  });
+
+
+  /* querySend({
     phoneNumber: req.body.name,
     date: '20191106',
     // date: getFormatedDate()
@@ -40,11 +62,13 @@ router.post('/signIn', function (req, res, next) {
           __user = await createUser(req.body.name);
         }
 
+        var _url = sys_config.PICTURE_SERVER_HOST + ':' + sys_config.PICTURE_SERVER_PORT + sys_config.PICTURE_SERVER_PATH;
+        __user.avatar = _url + __user.avatar;
+        __user.bgUrl = _url + __user.bgUrl;
+
+
         // 创建token
-        tokenUtil.setToken({
-          userName: req.body.name,
-          userId: __user._id
-        }, res)
+        tokenUtil.setToken(__user, res)
 
         res.send({
           code: 1,
@@ -71,7 +95,7 @@ router.post('/signIn', function (req, res, next) {
       data: err,
       message: "请求失败"
     })
-  })
+  }) */
 })
 
 // 更改用户背景图片
@@ -124,14 +148,16 @@ function checkUser(phoneNumber) {
 // 创建用户
 function createUser(phoneNumber) {
   var nickname = '用户' + Date.now();
-  // var avatar = config.uploadPath+'avatar/avatar'+Math.ceil(Math.random() * 9 )+'.jpg';
-  // var bg = config.uploadPath+'bg/topbg'+Math.ceil(Math.random() * 4 )+'.jpg';
+  var avatar = 'avatar.png';
+  var bg = 'default-bg.png';
   var gender = '1';
 
   return User.create({
     nickname: nickname,
     gender: gender,
-    phoneNum: phoneNumber
+    phoneNum: phoneNumber,
+    avatar: avatar,
+    bgUrl: bg
   })
 }
 

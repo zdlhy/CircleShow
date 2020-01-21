@@ -3,7 +3,7 @@ const axios = require('axios')
 const instance = axios.create({
   // baseURL: 'http://rap2api.taobao.org/app/mock/230615/',
   baseURL: '/api',
-  timeout: 1000
+  timeout: 3000
 })
 
 instance.interceptors.request.use(function (config) {

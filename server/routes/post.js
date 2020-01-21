@@ -1,6 +1,6 @@
 var express = require('express');
 
-var Post = require('../models/Post');
+var Post = require('../models/Post');
 
 var router = express.Router();
 
@@ -11,7 +11,7 @@ router.get('/getList', function (req, res, next) {
 
     const doc_count = new Promise(function (resolve, reject) {
         Post.find({
-            'user': req.user.userId
+            // 'user': req.user._id
         }).countDocuments(function (error, data) {
             if (error) {
                 reject(error)
@@ -21,7 +21,7 @@ router.get('/getList', function (req, res, next) {
     })
     const data_list = new Promise(function (resolve, reject) {
         Post.find({
-            'user': req.user.userId
+            // 'user': req.user._id
         }).
             skip(_skip).//需要跳过的条数
             limit(_limit).//查询条数

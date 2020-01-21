@@ -21,6 +21,20 @@ export default new Router({
       path: '/publish',
       name: 'publish',
       component: () => import('view/publish')
+    },
+    {
+      path: '/mypage',
+      name: 'mypage',
+      component: () => import('view/user')
+    },
+    {
+      path: '/chat',
+      name: 'chatRoom',
+      component: () => import('view/chat')
+    },
+    {
+      path: '/chatList',
+      component: () => import('view/chatList')
     }
   ]
 })

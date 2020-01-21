@@ -1,7 +1,7 @@
 var express = require('express');
 
 var sys_config = require('../config');
-var Post = require('../models/Post');
+var Post = require('../models/Post');
 var upload = require('../utils/upFile');
 
 var router = express.Router();
@@ -22,7 +22,7 @@ router.post('/postText', function (req, res, next) {
     Post.create({
         content:req.body.text,
         pictureList:req.body.picture,
-        user:req.user.userId
+        user:req.user._id
     },function(error,data){
         if(error){
             res.json({
